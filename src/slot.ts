@@ -3,7 +3,8 @@ export abstract class Slot {
     constructor(readonly isFree: Boolean, readonly from: Date, readonly to: Date) {}
 
     intersect(another: Slot): Boolean {
-        return this.from == another.from;
+        const inter = this.from == another.from        
+        return inter;
     }
 }
 

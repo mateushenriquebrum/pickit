@@ -12,7 +12,7 @@ export class Calendar {
         const _unique = this.all
             .map(mine => set.some( other => !other.intersect(mine)))
             .every(u => u)
-            
+        
         if(_unique) {
             this.all.push(...set)
             return new Ok(this.all);
