@@ -6,7 +6,7 @@ export class Calendar {
         // this is a safe set of slots, it is intend to come from a repository
         // TODO: raise exception when not, you are using it wrongly
     }
-
+    
     add(set: Array<Free>): Result<Array<Slot>> {
        
         const _unique = this.all

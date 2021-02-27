@@ -2,6 +2,7 @@ import {Slot, Taken, Free} from '../src/slot';
 import {Calendar} from '../src/calendar';
 
 export type InterviewerId = String
+export type Email = String
 
 export abstract class Result<O> {
     public error: Array<String> = [];
@@ -44,5 +45,12 @@ export class SetCalendarForInterviewer {
             const result = await this.rep.slotsOf(id);        
             return  new Ok(result);
         }
+    }
+}
+
+export class InviteInterviwerByEmail {
+    constructor(){}
+    public async execute(id: InterviewerId, email: Email): Promise<Result<String>> {
+        return  new Ok("some_random_and_unique_token");
     }
 }

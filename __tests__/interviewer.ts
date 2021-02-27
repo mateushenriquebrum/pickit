@@ -1,7 +1,8 @@
 import {
     InterviewerRepository,
     FetchCalendarForInterviewer,    
-    SetCalendarForInterviewer
+    SetCalendarForInterviewer,
+    InviteInterviwerByEmail
 } from '../src/interviewer';
 import {
     Free,
@@ -26,7 +27,7 @@ beforeEach(() => {
     repMock = mock<InterviewerRepository>();
 });
 
-describe("Interviewer fetchis its calendar", () => {
+describe("Interviewer fetches its calendar", () => {
     const zero = new Date(0);
     const fifteen = new Date(1000*60*15) // 15 min
     const thirty = new Date(1000*60*30) // 30 min
@@ -59,4 +60,10 @@ describe("Interviewer fetchis its calendar", () => {
         const [validation] = (await set.execute(id, [someFree])).error;
         expect(validation).toBe("Slot already set");
     });
+
+    it("Then it invite an interviewer by email to pick a slot", async () => {
+        const invite = new InviteInterviwerByEmail();
+        const token = (await invite.execute(id, "mateushenriquebrum@gmail.com")).ok;
+        expect(token).toBe("some_random_and_unique_token");
+    })
 })
