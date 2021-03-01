@@ -1,8 +1,9 @@
 import {
     InterviewerRepository,
-    FetchCalendarForInterviewer,    
-    SetCalendarForInterviewer,
-    InviteInterviwerByEmail
+    FetchInterviwerCalendar,    
+    SetFreeSlotOnIntervierCalendar,
+    InviteInterviwerByEmail,
+    TokenGenerator
 } from '../src/interviewer';
 import {
     Free,
@@ -22,9 +23,11 @@ import {
 } from 'ts-mockito';
 
 let repMock: InterviewerRepository;
+let genMock: TokenGenerator;
 
 beforeEach(() => {
     repMock = mock<InterviewerRepository>();
+    genMock = mock<TokenGenerator>();
 });
 
 describe("Interviewer fetches its calendar", () => {
@@ -38,7 +41,7 @@ describe("Interviewer fetches its calendar", () => {
 
     it("Then it shows every slot", async () => {
         when(repMock.slotsOf(id)).thenResolve([someFree])
-        const fetch = new FetchCalendarForInterviewer(instance(repMock));
+        const fetch = new FetchInterviwerCalendar(instance(repMock));
         const calendar = await fetch.execute(id);
         expect(calendar.length).toBe(1);
         verify(repMock.slotsOf(id)).once()
@@ -47,7 +50,7 @@ describe("Interviewer fetches its calendar", () => {
     it("Then it sets some slots as free", async () => {
         when(repMock.slotsOf(id))
             .thenResolve([someTaken])
-        const set = new SetCalendarForInterviewer(instance(repMock));
+        const set = new SetFreeSlotOnIntervierCalendar(instance(repMock));
         const calendar = (await set.execute(id, [anotherFree])).ok
         expect(calendar.length).toBe(2);
         verify(repMock.setSlotsTo(id, anyOfClass(Array))).once()
@@ -56,14 +59,20 @@ describe("Interviewer fetches its calendar", () => {
     it("Then it cannot sets some existents slot as free", async () => {
         when(repMock.slotsOf(id))
             .thenResolve([someTaken])
-        const set = new SetCalendarForInterviewer(instance(repMock));
+        const set = new SetFreeSlotOnIntervierCalendar(instance(repMock));
         const [validation] = (await set.execute(id, [someFree])).error;
         expect(validation).toBe("Slot already set");
     });
-
-    it("Then it invite an interviewer by email to pick a slot", async () => {
-        const invite = new InviteInterviwerByEmail();
-        const token = (await invite.execute(id, "mateushenriquebrum@gmail.com")).ok;
-        expect(token).toBe("some_random_and_unique_token");
+    
+    it("Then it generate distinct token for every interviwer", async () => {
+        when(genMock.inviteToken(id, anyString()))
+            .thenResolve("mateushenriquebrum@gmail.com")
+            .thenResolve("iagobrum@gmail.com")
+        const invite = new InviteInterviwerByEmail(genMock);
+        const first = (await invite.execute(id, "mateushenriquebrum@gmail.com")).ok;
+        const second = (await invite.execute(id, "iagobrum@gmail.com")).ok;
+        expect(first).not.toBeNull()
+        expect(second).not.toBeNull()
+        expect(second).not.toBe(first);
     })
 })
