@@ -1,6 +1,6 @@
-import {Slot, Taken, Free} from '../src/slot';
-import {Calendar} from '../src/calendar';
-import { Result, Ok, Error, Email } from "../src/shared";
+import {Slot, Taken, Free} from './slot';
+import {Calendar} from './calendar';
+import { Result, Ok, Error, Email } from "./shared";
 
 export type InterviewerId = String
 

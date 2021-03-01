@@ -4,14 +4,14 @@ import {
     SetFreeSlotOnIntervierCalendar,
     InviteInterviwerByEmail,
     TokenGenerator
-} from '../src/interviewer';
+} from '../../src/domain/interviewer';
 import {
     Free,
     Taken,    
-} from '../src/slot';
+} from '../../src/domain/slot';
 import {
     Calendar
-} from '../src/calendar';
+} from '../../src/domain/calendar';
 import {
     instance,
     anything,

@@ -2,18 +2,18 @@ import {
     Free,
     Taken,
     Slot
-} from '../src/slot';
+} from '../../src/domain/slot';
 
 import {
     Calendar,
-} from '../src/calendar';
+} from '../../src/domain/calendar';
 
 describe("Calendar", () => {
     let zero = new Date(0);
     let fifteen = new Date(1000*60*15) // 15 min
     let thirty = new Date(1000*60*30) // 30 min
-    let someFreeSlot = new Free(zero, fifteen)    
-    let anotherFreeSlot = new Free(fifteen, thirty);
+    let someFreeSlot = new Free(zero, fifteen, "")    
+    let anotherFreeSlot = new Free(fifteen, thirty, "");
     
     it("Then it should start with some slots", async () => {
         let calendar = new Calendar([someFreeSlot, anotherFreeSlot]);
