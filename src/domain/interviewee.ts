@@ -4,8 +4,8 @@ import {Result, Ok, Error, Email} from './shared'
 export type Token = String
 
 export interface IntervieweeCalenderRepository {
-    slotsByToken(token: Token): Promise<Array<Free>>
-    saveTakenByToken(taken: Taken): Promise<Taken>
+    fetchFreeSlotsByToken(token: Token): Promise<Array<Free>>
+    saveTakenSlotByToken(taken: Taken): Promise<Taken>
 }
 
 export class FetchIntervieweeCalendarByToken {
@@ -13,7 +13,7 @@ export class FetchIntervieweeCalendarByToken {
 
     async execute(token: Token) : Promise<Result<Array<Slot>>> {
         // verify if token has been used
-        const slots = (await this.rep.slotsByToken(token))
+        const slots = (await this.rep.fetchFreeSlotsByToken(token))
         return new Ok(slots);
     }    
 }
@@ -25,7 +25,7 @@ export class PickFreeSlotByToken {
         // verify if token has been used
         // verify authenticity of slot, maybe it should be a SlotId
         const taken = slot.takenBy(token);
-        await this.rep.saveTakenByToken(taken);
+        await this.rep.saveTakenSlotByToken(taken);
         return new Ok(taken)
     }    
 }

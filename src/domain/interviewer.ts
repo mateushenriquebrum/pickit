@@ -5,8 +5,8 @@ import { Result, Ok, Error, Email } from "./shared";
 export type InterviewerId = String
 
 export interface InterviewerRepository {
-    slotsOf(id: InterviewerId): Promise<Array<Slot>>
-    setSlotsTo(id: InterviewerId, slot: Array<Free>): Taken
+    fetchAllSlotsFrom(id: InterviewerId): Promise<Array<Slot>>
+    saveFreeSlotTo(id: InterviewerId, slot: Array<Free>): Taken
 }
 
 export interface TokenGenerator {
@@ -16,20 +16,20 @@ export interface TokenGenerator {
 export class FetchInterviwerCalendar { 
     constructor(private rep: InterviewerRepository) {}
     public execute(id: InterviewerId): Promise<Array<Slot>> {
-        return this.rep.slotsOf(id);
+        return this.rep.fetchAllSlotsFrom(id);
     }
 }
 
 export class SetFreeSlotOnIntervierCalendar {
     constructor(private rep: InterviewerRepository) {}   
     public async execute(id: InterviewerId, set: Array<Free>): Promise<Result<Array<Slot>>> {
-        let slots = await this.rep.slotsOf(id);
+        let slots = await this.rep.fetchAllSlotsFrom(id);
         let calendar = new Calendar(slots).add(set);
         if(calendar.error.length) {
             return new Error(calendar.error);
         } else {
-            this.rep.setSlotsTo(id, set);
-            const result = await this.rep.slotsOf(id);        
+            this.rep.saveFreeSlotTo(id, set);
+            const result = await this.rep.fetchAllSlotsFrom(id);        
             return  new Ok(result);
         }
     }
