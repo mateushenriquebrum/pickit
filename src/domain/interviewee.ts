@@ -1,5 +1,5 @@
 import { Free, Slot, Taken } from "./slot";
-import {Result, Ok, Error, Email} from './shared'
+import { Result, Ok, Error, Email } from './shared'
 
 export type Token = String
 
@@ -9,28 +9,28 @@ export interface IntervieweeCalenderRepository {
 }
 
 export class FetchIntervieweeCalendarByToken {
-    constructor(private rep: IntervieweeCalenderRepository) {}
+    constructor(private rep: IntervieweeCalenderRepository) { }
 
-    async execute(token: Token) : Promise<Result<Array<Slot>>> {
+    async execute(token: Token): Promise<Result<Array<Slot>>> {
         // verify if token has been used
         const slots = (await this.rep.fetchFreeSlotsByToken(token))
         return new Ok(slots);
-    }    
+    }
 }
 
 export class PickFreeSlotByToken {
-    constructor(private rep: IntervieweeCalenderRepository) {}
+    constructor(private rep: IntervieweeCalenderRepository) { }
 
-    async execute(token: Token, slot: Free) : Promise<Result<Confirmation>> {
+    async execute(token: Token, slot: Free): Promise<Result<Confirmation>> {
         // verify if token has been used
         // verify authenticity of slot, maybe it should be a SlotId
         const taken = slot.takenBy(token);
         await this.rep.saveTakenSlotByToken(taken);
         return new Ok(taken)
-    }    
+    }
 }
 
 
 export class Confirmation {
-    constructor(public from: Date, public to: Date, interviewer: Email) {}
+    constructor(public from: Date, public to: Date, interviewer: Email) { }
 }

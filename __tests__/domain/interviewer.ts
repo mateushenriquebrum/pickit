@@ -1,13 +1,13 @@
 import {
     InterviewerRepository,
-    FetchInterviwerCalendar,    
+    FetchInterviwerCalendar,
     SetFreeSlotOnIntervierCalendar,
     InviteInterviwerByEmail,
     TokenGenerator
 } from '../../src/domain/interviewer';
 import {
     Free,
-    Taken,    
+    Taken,
 } from '../../src/domain/slot';
 import {
     Calendar
@@ -32,11 +32,11 @@ beforeEach(() => {
 
 describe("Interviewer fetches its calendar", () => {
     const zero = new Date(0);
-    const fifteen = new Date(1000*60*15) // 15 min
-    const thirty = new Date(1000*60*30) // 30 min
-    const someFree = new Free(zero, fifteen,"")    
-    const someTaken = new Taken(zero, fifteen,"","");
-    const anotherFree = new Free(fifteen, thirty,"");
+    const fifteen = new Date(1000 * 60 * 15) // 15 min
+    const thirty = new Date(1000 * 60 * 30) // 30 min
+    const someFree = new Free(zero, fifteen, "")
+    const someTaken = new Taken(zero, fifteen, "", "");
+    const anotherFree = new Free(fifteen, thirty, "");
     const id = "1234";
 
     it("Then it shows every slot", async () => {
@@ -63,7 +63,7 @@ describe("Interviewer fetches its calendar", () => {
         const [validation] = (await set.execute(id, [someFree])).error;
         expect(validation).toBe("Slot already set");
     });
-    
+
     it("Then it generate distinct token for every interviwer", async () => {
         when(genMock.inviteToken(id, anyString()))
             .thenResolve("mateushenriquebrum@gmail.com")

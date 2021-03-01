@@ -12,8 +12,8 @@ describe("Interviewee fetch a calendar by token", () => {
 
     const onlyFreeSlot = new Free(new Date(0), new Date(1), "interviewer@company.ie")
     const token = "any_token";
-   
-    it("Then interviewee fetch it all", async () => {        
+
+    it("Then interviewee fetch it all", async () => {
         when(mockRep.fetchFreeSlotsByToken(token)).thenResolve([onlyFreeSlot])
         const fetch = new FetchIntervieweeCalendarByToken(instance(mockRep))
         const slots = (await fetch.execute(token)).ok

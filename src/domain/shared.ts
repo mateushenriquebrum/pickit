@@ -1,6 +1,6 @@
 export abstract class Result<O> {
     public error: Array<String> = [];
-    public ok: O    
+    public ok: O
 }
 
 export class Ok<T> extends Result<T>{
