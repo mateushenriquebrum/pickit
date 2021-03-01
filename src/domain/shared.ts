@@ -16,3 +16,5 @@ export class Error<T> extends Result<T>{
 }
 
 export type Email = String
+
+export type Token = String

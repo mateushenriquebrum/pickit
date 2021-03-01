@@ -1,7 +1,5 @@
 import { Free, Slot, Taken } from "./slot";
-import { Result, Ok, Error, Email } from './shared'
-
-export type Token = String
+import { Result, Ok, Error, Email, Token } from './shared'
 
 export interface IntervieweeCalenderRepository {
     fetchFreeSlotsByToken(token: Token): Promise<Array<Free>>
