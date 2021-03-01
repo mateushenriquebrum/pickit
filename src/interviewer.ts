@@ -1,9 +1,8 @@
 import {Slot, Taken, Free} from '../src/slot';
 import {Calendar} from '../src/calendar';
-import { Result, Ok, Error } from "../src/shared";
+import { Result, Ok, Error, Email } from "../src/shared";
 
 export type InterviewerId = String
-export type Email = String
 
 export interface InterviewerRepository {
     slotsOf(id: InterviewerId): Promise<Array<Slot>>

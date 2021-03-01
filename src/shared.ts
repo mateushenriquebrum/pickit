@@ -14,3 +14,5 @@ export class Error<T> extends Result<T>{
         super();
     }
 }
+
+export type Email = String

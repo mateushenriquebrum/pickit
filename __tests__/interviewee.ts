@@ -1,6 +1,6 @@
-import { FetchIntervieweeCalendarByToken, IntervieweeCalenderRepository } from '../src/interviewee';
-import { instance, anything, mock, when, verify } from 'ts-mockito';
-import { Free } from '../src/slot';
+import { FetchIntervieweeCalendarByToken, IntervieweeCalenderRepository, PickFreeSlotByToken, Confirmation } from '../src/interviewee';
+import { instance, anything, mock, when, verify, anyOfClass } from 'ts-mockito';
+import { Free, Taken } from '../src/slot';
 
 let mockRep = mock<IntervieweeCalenderRepository>()
 
@@ -10,7 +10,7 @@ beforeEach(() => {
 
 describe("Interviewee fetch a calendar by token", () => {
 
-    const onlyFreeSlot = new Free(new Date(0), new Date(1))
+    const onlyFreeSlot = new Free(new Date(0), new Date(1), "interviewer@company.ie")
     const token = "any_token";
    
     it("Then interviewee fetch it all", async () => {        
@@ -23,8 +23,12 @@ describe("Interviewee fetch a calendar by token", () => {
     });
 
     it("Then interviewee pick a free slot", async () => {
-        //const pick = new PickFreeSlotByToken(instance(mockRep))
-        //const confirm = (await pick.execute(token, onlyFreeSlot))
+        const pick = new PickFreeSlotByToken(instance(mockRep))
+        const confirm = (await pick.execute(token, onlyFreeSlot)).ok
+        const result = new Taken(new Date(0), new Date(1), "interviewer@company.ie", token);
+        expect(confirm).toStrictEqual(result);
+        verify(mockRep.slotsByToken(token)).once()
+        verify(mockRep.saveTakenByToken(anyOfClass(Taken))).once()
     });
 
     it("Then interviewee pick a taken slot", async () => {
@@ -32,6 +36,10 @@ describe("Interviewee fetch a calendar by token", () => {
     });
 
     it("Then interviewee try to pick another slot with the same token", async () => {
+
+    });
+
+    it("Then interviewee try to pick a slot taken by another interviwee", async () => {
 
     });
 });
