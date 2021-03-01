@@ -40,24 +40,24 @@ describe("Interviewer fetches its calendar", () => {
     const id = "1234";
 
     it("Then it shows every slot", async () => {
-        when(repMock.slotsOf(id)).thenResolve([someFree])
+        when(repMock.fetchAllSlotsFrom(id)).thenResolve([someFree])
         const fetch = new FetchInterviwerCalendar(instance(repMock));
         const calendar = await fetch.execute(id);
         expect(calendar.length).toBe(1);
-        verify(repMock.slotsOf(id)).once()
+        verify(repMock.fetchAllSlotsFrom(id)).once()
     });
 
     it("Then it sets some slots as free", async () => {
-        when(repMock.slotsOf(id))
+        when(repMock.fetchAllSlotsFrom(id))
             .thenResolve([someTaken])
         const set = new SetFreeSlotOnIntervierCalendar(instance(repMock));
         const calendar = (await set.execute(id, [anotherFree])).ok
         expect(calendar.length).toBe(2);
-        verify(repMock.setSlotsTo(id, anyOfClass(Array))).once()
+        verify(repMock.saveFreeSlotTo(id, anyOfClass(Array))).once()
     });
 
     it("Then it cannot sets some existents slot as free", async () => {
-        when(repMock.slotsOf(id))
+        when(repMock.fetchAllSlotsFrom(id))
             .thenResolve([someTaken])
         const set = new SetFreeSlotOnIntervierCalendar(instance(repMock));
         const [validation] = (await set.execute(id, [someFree])).error;
