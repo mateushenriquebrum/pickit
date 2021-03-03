@@ -1,16 +1,10 @@
 import * as Sequelize from "sequelize";
-import { CacheStrategy } from "./cache";
 
-class NullCacheStrategy implements CacheStrategy {
-    create(instance: any) { }
-    update(instance: any) { }
-}
-
-export async function createDatabase(seq: Sequelize.Sequelize, cache: CacheStrategy = new NullCacheStrategy()) {
+export async function createDatabase(seq: Sequelize.Sequelize) {
     const Slots = seq.define('slots', {
         id: {
-            type: Sequelize.DataTypes.INTEGER,
-            autoIncrement: true,
+            type: Sequelize.DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4,                        
             allowNull: false,
             primaryKey: true
         },
@@ -34,14 +28,7 @@ export async function createDatabase(seq: Sequelize.Sequelize, cache: CacheStrat
             type: Sequelize.DataTypes.CHAR,
             allowNull: true
         }
-    }
-        , {
-            hooks: {
-                afterCreate: cache.create,
-                afterUpdate: cache.update,
-            }
-        }
-    );
+    });
 
     //WARNING: this code should never go to production env
     await seq.sync({ force: true });

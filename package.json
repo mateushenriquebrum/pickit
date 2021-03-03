@@ -14,7 +14,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "mysql2": "^2.2.5",
-    "sequelize": "^6.5.0"
+    "sequelize": "^6.5.0",
+    "sequelize-transparent-cache": "^2.3.0",
+    "sequelize-transparent-cache-ioredis": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.1",
@@ -26,7 +28,7 @@
     "@types/sequelize": "^4.28.9",
     "@types/sinon": "^9.0.10",
     "babel-jest": "^26.6.3",
-    "jest": "^26.6.3",    
+    "jest": "^26.6.3",
     "sinon": "^9.2.4",
     "sqlite3": "^5.0.2",
     "ts-mockito": "^2.6.1",
