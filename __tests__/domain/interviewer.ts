@@ -53,7 +53,7 @@ describe("Interviewer fetches its calendar", () => {
         const set = new SetFreeSlotOnIntervierCalendar(instance(repMock));
         const calendar = (await set.execute(id, [anotherFree])).ok
         expect(calendar.length).toBe(2);
-        verify(repMock.saveFreeSlotTo(id, anyOfClass(Array))).once()
+        verify(repMock.saveFreeSlotTo(anyOfClass(Array))).once()
     });
 
     it("Then it cannot sets some existents slot as free", async () => {

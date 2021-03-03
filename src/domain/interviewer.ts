@@ -4,7 +4,7 @@ import { Result, Ok, Error, Email, InterviewerId } from "./shared";
 
 export interface InterviewerRepository {
     fetchAllSlotsFrom(interviewer: Email): Promise<Array<Slot>>
-    saveFreeSlotTo(interviewer: Email, slot: Array<Free>): Taken
+    saveFreeSlotTo(slots: Array<Free>): Promise<Array<Free>>
 }
 
 export interface TokenGenerator {
@@ -26,7 +26,7 @@ export class SetFreeSlotOnIntervierCalendar {
         if (calendar.error.length) {
             return new Error(calendar.error);
         } else {
-            this.rep.saveFreeSlotTo(id, set);
+            await this.rep.saveFreeSlotTo(set);
             const result = await this.rep.fetchAllSlotsFrom(id);
             return new Ok(result);
         }

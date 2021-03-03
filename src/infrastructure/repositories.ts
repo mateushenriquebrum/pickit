@@ -41,7 +41,13 @@ export class SeqInterviewerRepository implements InterviewerRepository {
             }
         });
     }
-    saveFreeSlotTo(interviewer: Email, slot: Free[]): Taken {
-        return null;
+    async saveFreeSlotTo(slots: Free[]): Promise<Array<Free>> {
+        const fs = slots.map(async slot => {
+            const ds = await this.seq.model("slots").create(slot);
+            const t: Free = ds.get({plain: true})
+            return t;
+        });
+
+        return Promise.all(fs);
     }
 }
