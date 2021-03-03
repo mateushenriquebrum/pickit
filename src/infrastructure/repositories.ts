@@ -18,7 +18,9 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
         return slots;
     }
     async saveTakenSlotByToken(taken: Taken): Promise<Taken> {
-        return Promise.resolve(null);
+        const ds = await this.seq.model("slots").create(taken);
+        const t: Taken = ds.get({plain: true})
+        return Promise.resolve(t);
     }
 }
 

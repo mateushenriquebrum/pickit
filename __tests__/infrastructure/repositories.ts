@@ -25,7 +25,7 @@ test("Sould fetch only free slot by token", async () => {
 test("Sould return the saved taken slot", async () => {    
     const taken = new Taken(new Date(0), new Date(0),  "interviwer@company.ie", "candidate@gmail.com")
     const savedTaken = await new SeqIntervieweeRepository(seq).saveTakenSlotByToken(taken)
-    expect(savedTaken).not.toBeNull
+    expect(savedTaken).not.toBeNull()
 })
 
 test("Sould return the saved taken slot", async () => {    

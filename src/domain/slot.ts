@@ -10,7 +10,7 @@ export abstract class Slot {
 }
 
 export class Taken extends Slot {
-    constructor(readonly from: Date, readonly to: Date, readonly interviwer: Email, readonly interviewee: Token) {
+    constructor(readonly from: Date, readonly to: Date, readonly interviewer: Email, readonly interviewee: Token) {
         super(from, to, false)
     }
 }
