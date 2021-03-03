@@ -16,11 +16,11 @@ export async function createDatabase(seq: Sequelize.Sequelize) {
             type: Sequelize.DataTypes.DATE,
             allowNull: false
         },
-        interviwer: {
+        interviewer: {
             type: Sequelize.DataTypes.CHAR,
             allowNull: false
         },
-        interviwee: {
+        interviewee: {
             type: Sequelize.DataTypes.CHAR,
             allowNull: true
         },

@@ -9,8 +9,8 @@ let seq = new Sequelize.Sequelize('sqlite::memory:?cache=shared')
 beforeEach(async() => {
     await DB.createDatabase(seq);
     const DbSlot = seq.model("slots");
-    await DbSlot.create({from: new Date(), to: new Date(), token: "token", interviwer: "interviwer@company.ie"})
-    await DbSlot.create({from: new Date(), to: new Date(), token: "token", interviwer: "interviwer@company.ie", interviwee: "candidate@gmail.com"})
+    await DbSlot.create({from: new Date(), to: new Date(), token: "token", interviewer: "interviwer@company.ie"})
+    await DbSlot.create({from: new Date(), to: new Date(), token: "token", interviewer: "interviwer@company.ie", interviewee: "candidate@gmail.com"})
 })
 
 afterEach(async () => {
@@ -29,7 +29,6 @@ test("Sould return the saved taken slot", async () => {
 })
 
 test("Sould return the saved taken slot", async () => {    
-    const taken = new Taken(new Date(0), new Date(0),  "interviwer@company.ie", "candidate@gmail.com")
-    //const savedTaken = await new SeqInterviewerRepository(seq).fetchAllSlotsFrom()
-    //expect(savedTaken).not.toBeNull
+    const savedTaken = await new SeqInterviewerRepository(seq).fetchAllSlotsFrom("interviwer@company.ie")    
+    expect(savedTaken.length).toBe(2)
 })

@@ -1,6 +1,6 @@
 import { IntervieweeRepository } from '../domain/interviewee';
 import { InterviewerRepository } from '../domain/interviewer';
-import { Token, InterviewerId } from "../domain/shared";
+import { Token, InterviewerId, Email } from "../domain/shared";
 import { Taken, Free, Slot } from "../domain/slot";
 import * as Sequelize from 'sequelize';
 
@@ -10,16 +10,14 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
 
     async fetchFreeSlotsByToken(token: Token): Promise<Array<Free>> {
         const DbSlot = this.seq.model("slots");
-        const query = await DbSlot.findAll({where:{interviwee: null}})
+        const query = await DbSlot.findAll({where:{interviewee: null}})
         const slots = query.map(ds => {
-            const f = new Date(ds.get("from").toString());
-            const t = new Date(ds.get("to").toString());
-            const i = ds.get("interviwer").toString();
-            return new Free(f, t, i)
+            const free: Free = ds.get({plain: true})
+            return free
         })
         return slots;
     }
-    saveTakenSlotByToken(taken: Taken): Promise<Taken> {
+    async saveTakenSlotByToken(taken: Taken): Promise<Taken> {
         return Promise.resolve(null);
     }
 }
@@ -28,12 +26,20 @@ export class SeqInterviewerRepository implements InterviewerRepository {
     
     constructor(private seq: Sequelize.Sequelize) {}
 
-    fetchAllSlotsFrom(id: InterviewerId): Promise<Slot[]> {
-        const DbSlot = this.seq.model("slots");
-        return null
-        //return DbSlot.findAll({where:{interviwee: null}})
+    async fetchAllSlotsFrom(interviewer: Email): Promise<Slot[]> {
+        const DbSlot = this.seq.model("slots");        
+        const slots = await DbSlot.findAll({where:{interviewer: interviewer.toString()}});
+        return slots.map(ds => {            
+            if(ds.get("interviewee")) {
+                const taken: Taken = ds.get({plain: true})
+                return taken
+            } else {
+                const free: Free = ds.get({plain: true})
+                return free
+            }
+        });
     }
-    saveFreeSlotTo(id: InterviewerId, slot: Free[]): Taken {
-        throw new Error('Method not implemented.');
+    saveFreeSlotTo(interviewer: Email, slot: Free[]): Taken {
+        return null;
     }
 }
