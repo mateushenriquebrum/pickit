@@ -1,9 +1,10 @@
-import { IntervieweeCalenderRepository } from '../domain/interviewee';
-import { Token } from "../domain/shared";
-import { Taken, Free } from "../domain/slot";
+import { IntervieweeRepository } from '../domain/interviewee';
+import { InterviewerRepository } from '../domain/interviewer';
+import { Token, InterviewerId } from "../domain/shared";
+import { Taken, Free, Slot } from "../domain/slot";
 import * as Sequelize from 'sequelize';
 
-export class SeqIntervieweeCalenderRepository implements IntervieweeCalenderRepository {
+export class SeqIntervieweeRepository implements IntervieweeRepository {
 
     constructor(private seq: Sequelize.Sequelize) {}
 
@@ -20,5 +21,19 @@ export class SeqIntervieweeCalenderRepository implements IntervieweeCalenderRepo
     }
     saveTakenSlotByToken(taken: Taken): Promise<Taken> {
         return Promise.resolve(null);
+    }
+}
+
+export class SeqInterviewerRepository implements InterviewerRepository {
+    
+    constructor(private seq: Sequelize.Sequelize) {}
+
+    fetchAllSlotsFrom(id: InterviewerId): Promise<Slot[]> {
+        const DbSlot = this.seq.model("slots");
+        return null
+        //return DbSlot.findAll({where:{interviwee: null}})
+    }
+    saveFreeSlotTo(id: InterviewerId, slot: Free[]): Taken {
+        throw new Error('Method not implemented.');
     }
 }

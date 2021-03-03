@@ -1,22 +1,20 @@
 import { Slot, Taken, Free } from './slot';
 import { Calendar } from './calendar';
-import { Result, Ok, Error, Email } from "./shared";
-
-export type InterviewerId = String
+import { Result, Ok, Error, Email, InterviewerId } from "./shared";
 
 export interface InterviewerRepository {
-    fetchAllSlotsFrom(id: InterviewerId): Promise<Array<Slot>>
-    saveFreeSlotTo(id: InterviewerId, slot: Array<Free>): Taken
+    fetchAllSlotsFrom(interviewer: Email): Promise<Array<Slot>>
+    saveFreeSlotTo(interviewer: Email, slot: Array<Free>): Taken
 }
 
 export interface TokenGenerator {
-    inviteToken(id: InterviewerId, email: Email): Promise<String>
+    inviteToken(interviewer: Email, interviewee: Email): Promise<String>
 }
 
 export class FetchInterviwerCalendar {
     constructor(private rep: InterviewerRepository) { }
-    public execute(id: InterviewerId): Promise<Array<Slot>> {
-        return this.rep.fetchAllSlotsFrom(id);
+    public execute(interviewer: Email): Promise<Array<Slot>> {
+        return this.rep.fetchAllSlotsFrom(interviewer);
     }
 }
 
