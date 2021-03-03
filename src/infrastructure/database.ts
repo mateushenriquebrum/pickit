@@ -1,6 +1,12 @@
 import * as Sequelize from "sequelize";
+import { CacheStrategy } from "./cache";
 
-export async function createDatabase(seq: Sequelize.Sequelize) {    
+class NullCacheStrategy implements CacheStrategy {
+    create(instance: any) { }
+    update(instance: any) { }
+}
+
+export async function createDatabase(seq: Sequelize.Sequelize, cache: CacheStrategy = new NullCacheStrategy()) {
     const Slots = seq.define('slots', {
         id: {
             type: Sequelize.DataTypes.INTEGER,
@@ -28,13 +34,21 @@ export async function createDatabase(seq: Sequelize.Sequelize) {
             type: Sequelize.DataTypes.CHAR,
             allowNull: true
         }
-    });
+    }
+        , {
+            hooks: {
+                afterCreate: cache.create,
+                afterUpdate: cache.update,
+            }
+        }
+    );
 
     //WARNING: this code should never go to production env
     await seq.sync({ force: true });
 }
 
-export async function dropDatabase(seq: Sequelize.Sequelize) {    
+//WARNING: this code should never go to production env
+export async function dropDatabase(seq: Sequelize.Sequelize) {
     const Slots = seq.model("slots")
     await Slots.drop();
 }
