@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "ioredis": "^4.23.0",
+    "ioredis": "^4.23.0",    
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "sequelize": "^6.5.0",
     "sequelize-transparent-cache": "^2.3.0",

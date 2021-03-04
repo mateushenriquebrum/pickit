@@ -4,7 +4,7 @@ import * as DB from "../../src/infrastructure/database";
 import { SlotBuilder } from '../../src/domain/slot';
 import {TestDataModelFactory} from '../../src/infrastructure/model';
 
-let seq = new Sequelize.Sequelize('sqlite::memory:?cache=shared')
+let seq = new Sequelize.Sequelize('sqlite::memory:?cache=shared', {logging: false})
 let fac = new TestDataModelFactory(seq);
 
 beforeEach(async() => {
