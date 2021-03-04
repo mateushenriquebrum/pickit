@@ -1,11 +1,11 @@
-import { FetchIntervieweeCalendarByToken, IntervieweeCalenderRepository, PickFreeSlotByToken, Confirmation } from '../../src/domain/interviewee';
+import { FetchIntervieweeCalendarByToken, IntervieweeRepository, PickFreeSlotByToken, Confirmation } from '../../src/domain/interviewee';
 import { instance, anything, mock, when, verify, anyOfClass } from 'ts-mockito';
 import { Free, Taken } from '../../src/domain/slot';
 
-let mockRep = mock<IntervieweeCalenderRepository>()
+let mockRep = mock<IntervieweeRepository>()
 
 beforeEach(() => {
-    let mockRep = mock<IntervieweeCalenderRepository>()
+    let mockRep = mock<IntervieweeRepository>()
 });
 
 describe("Interviewee fetch a calendar by token", () => {

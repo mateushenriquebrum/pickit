@@ -1,24 +1,25 @@
+import { Model, ModelCtor } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { IntervieweeRepository } from '../domain/interviewee';
 import { InterviewerRepository } from '../domain/interviewer';
-import { Token, InterviewerId, Email } from "../domain/shared";
+import { Token, Email } from "../domain/shared";
 import { Taken, Free, Slot } from "../domain/slot";
-import * as Sequelize from 'sequelize';
+import {DataModelFactory} from "../infrastructure/model";
 
 export class SeqIntervieweeRepository implements IntervieweeRepository {
 
-    constructor(private seq: Sequelize.Sequelize) {}
+    constructor(private modelFactory: DataModelFactory) {}
 
     async fetchFreeSlotsByToken(token: Token): Promise<Array<Free>> {
-        const DbSlot = this.seq.model("slots");
-        const query = await DbSlot.findAll({where:{interviewee: null}})
-        const slots = query.map(ds => {            
+        const query = await this.modelFactory.Slot().cache("fetchFreeSlotsByToken").findAll({where:{interviewee: null}})
+        const slots = query.map((ds: Model) => {            
             const free: Free = ds.get({plain: true})
             return free
         })
         return slots;
     }
     async saveTakenSlotByToken(taken: Taken): Promise<Taken> {
-        const ds = await this.seq.model("slots").create(taken);
+        const ds = await this.modelFactory.Slot().cache().create(taken);
         const t: Taken = ds.get({plain: true})
         return Promise.resolve(t);
     }
@@ -26,12 +27,11 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
 
 export class SeqInterviewerRepository implements InterviewerRepository {
     
-    constructor(private seq: Sequelize.Sequelize) {}
+    constructor(private modelFactory: DataModelFactory) {}
 
     async fetchAllSlotsFrom(interviewer: Email): Promise<Slot[]> {
-        const DbSlot = this.seq.model("slots");        
-        const slots = await DbSlot.findAll({where:{interviewer: interviewer.toString()}});
-        return slots.map(ds => {            
+        const slots = await this.modelFactory.Slot().cache("fetchAllSlotsFrom").findAll({where:{interviewer: interviewer.toString()}});
+        return slots.map((ds: Model) => {            
             if(ds.get("interviewee")) {
                 const taken: Taken = ds.get({plain: true})
                 return taken
@@ -43,7 +43,7 @@ export class SeqInterviewerRepository implements InterviewerRepository {
     }
     async saveFreeSlotTo(slots: Free[]): Promise<Array<Free>> {
         const fs = slots.map(async slot => {
-            const ds = await this.seq.model("slots").create(slot);
+            const ds = await this.modelFactory.Slot().cache().create(slot);
             const t: Free = ds.get({plain: true})
             return t;
         });
