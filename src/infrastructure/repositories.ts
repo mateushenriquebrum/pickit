@@ -1,5 +1,4 @@
 import { Model, ModelCtor } from 'sequelize';
-import { Sequelize } from 'sequelize';
 import { IntervieweeRepository } from '../domain/interviewee';
 import { InterviewerRepository } from '../domain/interviewer';
 import { Token, Email } from "../domain/shared";

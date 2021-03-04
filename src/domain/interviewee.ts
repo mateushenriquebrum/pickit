@@ -19,16 +19,11 @@ export class FetchIntervieweeCalendarByToken {
 export class PickFreeSlotByToken {
     constructor(private rep: IntervieweeRepository) { }
 
-    async execute(token: Token, slot: Free): Promise<Result<Confirmation>> {
+    async execute(token: Token, slot: Free): Promise<Result<Taken>> {
         // verify if token has been used
-        // verify authenticity of slot, maybe it should be a SlotId
+        // verify authenticity of slot
         const taken = slot.takenBy(token);
         await this.rep.saveTakenSlotByToken(taken);
         return new Ok(taken)
     }
-}
-
-
-export class Confirmation {
-    constructor(public from: Date, public to: Date, interviewer: Email) { }
 }
