@@ -1,8 +1,7 @@
-import { freemem, type } from 'os';
 import * as Sequelize from 'sequelize';
 import { SeqIntervieweeRepository, SeqInterviewerRepository } from "../../src/infrastructure/repositories";
 import * as DB from "../../src/infrastructure/database";
-import { Free, Taken } from '../../src/domain/slot';
+import { SlotBuilder } from '../../src/domain/slot';
 import {TestDataModelFactory} from '../../src/infrastructure/model';
 
 let seq = new Sequelize.Sequelize('sqlite::memory:?cache=shared')
@@ -20,8 +19,8 @@ test("Should fetch only free slot by token", async () => {
     expect(freeSlots.length).toBe(1);
 })
 
-test("Should return the saved taken slot", async () => {    
-    const taken = new Taken(new Date(0), new Date(0),  "interviwer@company.ie", "candidate@gmail.com")
+test("Should return the saved taken slot", async () => {
+    const taken = SlotBuilder.TakenBy("candidate@gmail.com").at("01-01-2021 12:00").span(15).willChatWith("interviwer@company.ie").build();    
     const savedTaken = await new SeqIntervieweeRepository(fac).saveTakenSlotByToken(taken)
     expect(savedTaken).not.toBeNull()
 })
@@ -32,6 +31,7 @@ test("Should return the saved taken slot", async () => {
 })
 
 test("Should return the saved free as taken", async () => {    
-    const savedFree = await new SeqInterviewerRepository(fac).saveFreeSlotTo([new Free(new Date(0), new Date(0), "interviwer@company.ie")])
+    const taken = SlotBuilder.FreeWith("interviwer@company.ie").at("01-01-2021 12:00").span(15).build();    
+    const savedFree = await new SeqInterviewerRepository(fac).saveFreeSlotTo([taken])
     expect(savedFree.length).toBe(1)
 })

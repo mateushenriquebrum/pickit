@@ -1,6 +1,6 @@
 import { Slot, Taken, Free } from './slot';
 import { Calendar } from './calendar';
-import { Result, Ok, Error, Email, InterviewerId } from "./shared";
+import { Result, Ok, Error, Email } from "./shared";
 
 export interface InterviewerRepository {
     fetchAllSlotsFrom(interviewer: Email): Promise<Array<Slot>>
@@ -19,15 +19,17 @@ export class FetchInterviwerCalendar {
 }
 
 export class SetFreeSlotOnIntervierCalendar {
+    
     constructor(private rep: InterviewerRepository) { }
-    public async execute(id: InterviewerId, set: Array<Free>): Promise<Result<Array<Slot>>> {
-        let slots = await this.rep.fetchAllSlotsFrom(id);
+
+    public async execute(interviewer: Email, set: Array<Free>): Promise<Result<Array<Slot>>> {
+        let slots = await this.rep.fetchAllSlotsFrom(interviewer);
         let calendar = new Calendar(slots).add(set);
         if (calendar.error.length) {
             return new Error(calendar.error);
         } else {
             await this.rep.saveFreeSlotTo(set);
-            const result = await this.rep.fetchAllSlotsFrom(id);
+            const result = await this.rep.fetchAllSlotsFrom(interviewer);
             return new Ok(result);
         }
     }
@@ -35,7 +37,7 @@ export class SetFreeSlotOnIntervierCalendar {
 
 export class InviteInterviwerByEmail {
     constructor(private gen: TokenGenerator) { }
-    public async execute(id: InterviewerId, email: Email): Promise<Result<String>> {
-        return new Ok(await this.gen.inviteToken(id, email));
+    public async execute(interviewer: Email, email: Email): Promise<Result<String>> {
+        return new Ok(await this.gen.inviteToken(interviewer, email));
     }
 }
