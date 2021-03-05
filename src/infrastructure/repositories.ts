@@ -17,10 +17,7 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
 
     async fetchOfferedSlotsByToken(token: Token): Promise<Array<Offered>> {
         const query = await this.modelFactory.Slot().cache("fetchOfferedSlotsByToken").findAll({ where: { token } })
-        const slots = query.map((ds: Model) => {
-            const offered: Offered = ds.get({ plain: true })
-            return offered
-        })
+        const slots = query.map((ds: Model) => ds.get({ plain: true }))
         return slots;
     }
     async saveTakenSlotByToken(taken: Taken): Promise<Taken> {
@@ -33,13 +30,16 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
 export class SeqInterviewerRepository implements InterviewerRepository {
 
     constructor(private modelFactory: DataModelFactory) { }
-    
-    saveOfferedSlots(slots: Offered[]): Promise<Offered[]> {
-        throw new Error('Method not implemented.');
+
+    async saveOfferedSlots(slots: Offered[]): Promise<Offered[]> {
+        const fs = slots
+            .map(async slot => (await this.modelFactory.Slot().cache().create(slot)).get({ plain: true }));
+        return Promise.all(fs);
     }
 
-    fetchFreeSlotsByIds(slots: string[]): Promise<Free[]> {
-        throw new Error('Method not implemented.');
+    async fetchFreeSlotsByIds(ids: string[]): Promise<Free[]> {
+        const slots = await this.modelFactory.Slot().cache("fetchFreeSlotsByIds").findAll({ where: { id: { in: ids } } });
+        return slots.map((ds: Model) => ds.get({ plain: true }));
     }
 
     async fetchAllSlotsFrom(interviewer: Email): Promise<Slot[]> {
@@ -55,12 +55,8 @@ export class SeqInterviewerRepository implements InterviewerRepository {
         });
     }
     async saveFreeSlotTo(slots: Free[]): Promise<Array<Free>> {
-        const fs = slots.map(async slot => {
-            const ds = await this.modelFactory.Slot().cache().create(slot);
-            const t: Free = ds.get({ plain: true })
-            return t;
-        });
-
+        const fs = slots
+            .map(async slot => (await this.modelFactory.Slot().cache().create(slot)).get({ plain: true }));
         return Promise.all(fs);
     }
 }
