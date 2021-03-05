@@ -14,16 +14,13 @@ import {
     when,
     verify,
     anyString,
-    anyOfClass
+    anyOfClass,
+    anything
 } from 'ts-mockito';
 import { Email } from "../../src/domain/shared";
-let repMock: InterviewerRepository;
-let genMock: TokenGenerator;
 
-beforeEach(() => {
-    repMock = mock<InterviewerRepository>();
-    genMock = mock<TokenGenerator>();
-});
+let repMock: InterviewerRepository = mock<InterviewerRepository>();
+let genMock: TokenGenerator = mock<TokenGenerator>();
 
 describe("Interviewer fetches its calendar", () => {
 
@@ -62,12 +59,16 @@ describe("Interviewer fetches its calendar", () => {
     });
 
     it("Then it generate distinct token for every interviwer", async () => {
-        when(genMock.inviteToken(interviewer, anyString()))
+        when(genMock.invitationToken(interviewer, anyString()))
             .thenResolve("mateushenriquebrum@gmail.com")
-            .thenResolve("iagobrum@gmail.com")
-        const invite = new InviteInterviwerByEmail(genMock);
-        const first = (await invite.execute(interviewer, "mateushenriquebrum@gmail.com")).ok;
-        const second = (await invite.execute(interviewer, "iagobrum@gmail.com")).ok;
+            .thenResolve("iagobrum@gmail.com");
+        when(repMock.fetchFreeSlotsByIds(anything()))
+            .thenResolve([SlotBuilder.FreeWith(interviewer).at("12-12-2012 12:00").span(15).build()])        
+            .thenResolve([SlotBuilder.FreeWith(interviewer).at("12-12-2012 13:00").span(15).build()]);
+            
+        const invite = new InviteInterviwerByEmail(instance(genMock), instance(repMock));
+        const first = (await invite.execute(interviewer, "mateushenriquebrum@gmail.com", ["a"])).ok;
+        const second = (await invite.execute(interviewer, "iagobrum@gmail.com", ["b"])).ok;
         expect(first).not.toBeNull()
         expect(second).not.toBeNull()
         expect(second).not.toBe(first);

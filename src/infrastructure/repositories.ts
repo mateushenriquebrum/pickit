@@ -33,6 +33,14 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
 export class SeqInterviewerRepository implements InterviewerRepository {
 
     constructor(private modelFactory: DataModelFactory) { }
+    
+    saveOfferedSlots(slots: Offered[]): Promise<Offered[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    fetchFreeSlotsByIds(slots: string[]): Promise<Free[]> {
+        throw new Error('Method not implemented.');
+    }
 
     async fetchAllSlotsFrom(interviewer: Email): Promise<Slot[]> {
         const slots = await this.modelFactory.Slot().cache("fetchAllSlotsFrom").findAll({ where: { interviewer: interviewer.toString() } });

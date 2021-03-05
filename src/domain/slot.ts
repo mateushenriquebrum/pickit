@@ -2,7 +2,12 @@ const moment = require('moment');
 import { Moment } from "moment";
 import { Email, Token } from "./shared";
 
+export type SlotId = string;
+
 export abstract class Slot {
+    public id: SlotId;
+    // lack of abstraction, as you need id to serialize objects, e.g, DTO, Database, but it is the dabase that provide it.
+    // TODO: some experiments with URN urn:slot:<interviewer>:<from>:<to>, as it is a natural identifier in domain
     constructor(readonly from: Moment, readonly to: Moment) { }
 
     intersect(another: Slot): Boolean {

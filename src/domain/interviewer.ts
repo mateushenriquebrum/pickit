@@ -1,14 +1,16 @@
-import { Slot, Taken, Free } from './slot';
+import { Slot, Free, SlotId, Offered } from './slot';
 import { Calendar } from './calendar';
 import { Result, Ok, Error, Email } from "./shared";
 
 export interface InterviewerRepository {
     fetchAllSlotsFrom(interviewer: Email): Promise<Array<Slot>>
     saveFreeSlotTo(slots: Array<Free>): Promise<Array<Free>>
+    saveOfferedSlots(slots: Array<Offered>): Promise<Array<Offered>>
+    fetchFreeSlotsByIds(slots: Array<SlotId>): Promise<Array<Free>>
 }
 
 export interface TokenGenerator {
-    inviteToken(interviewer: Email, interviewee: Email): Promise<String>
+    invitationToken(interviewer: Email, interviewee: Email): Promise<String>
 }
 
 export class FetchInterviwerCalendar {
@@ -36,8 +38,13 @@ export class SetFreeSlotOnIntervierCalendar {
 }
 
 export class InviteInterviwerByEmail {
-    constructor(private gen: TokenGenerator) { }
-    public async execute(interviewer: Email, email: Email): Promise<Result<String>> {
-        return new Ok(await this.gen.inviteToken(interviewer, email));
+    constructor(private gen: TokenGenerator, private rep: InterviewerRepository) { }
+    public async execute(interviewer: Email, email: Email, ids: Array<SlotId>): Promise<Result<String>> {
+        const token = await this.gen.invitationToken(interviewer, email)
+        const freeSlots = await this.rep.fetchFreeSlotsByIds(ids);
+        // calendar should be entitled to convert free slot to offered slots by token
+        const offered = freeSlots.map(f => f.offeredTo(email, token))
+        this.rep.saveOfferedSlots(offered);
+        return new Ok(token);
     }
 }
