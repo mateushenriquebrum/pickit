@@ -6,7 +6,7 @@ export interface InterviewerRepository {
     fetchAllSlotsFrom(interviewer: Email): Promise<Array<Slot>>
     saveFreeSlotTo(slots: Array<Free>): Promise<Array<Free>>
     saveOfferedSlots(slots: Array<Offered>): Promise<Array<Offered>>
-    fetchFreeSlotsByIds(slots: Array<SlotId>): Promise<Array<Free>>
+    fetchFreeSlotsByIds(ids: Array<SlotId>): Promise<Array<Free>>
 }
 
 export interface TokenGenerator {
@@ -41,10 +41,15 @@ export class InviteInterviwerByEmail {
     constructor(private gen: TokenGenerator, private rep: InterviewerRepository) { }
     public async execute(interviewer: Email, email: Email, ids: Array<SlotId>): Promise<Result<String>> {
         const token = await this.gen.invitationToken(interviewer, email)
-        const freeSlots = await this.rep.fetchFreeSlotsByIds(ids);
-        // calendar should be entitled to convert free slot to offered slots by token
-        const offered = freeSlots.map(f => f.offeredTo(email, token))
-        this.rep.saveOfferedSlots(offered);
-        return new Ok(token);
+        const slots = await this.rep.fetchAllSlotsFrom(interviewer);
+        const frees = await this.rep.fetchFreeSlotsByIds(ids);
+        const res = new Calendar(slots).invite(frees, email, token);
+        if(res.error.length) {
+            new Error([`You can not invite this ${email}`]);
+        } else {
+            this.rep.saveOfferedSlots(res.ok);
+            return new Ok(token);
+        }
+        
     }
 }

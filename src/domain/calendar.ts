@@ -1,5 +1,5 @@
-import { Slot, Free, Taken } from "./slot";
-import { Result, Ok, Error } from "./shared";
+import { Slot, Free, Taken, Offered } from "./slot";
+import { Result, Ok, Error, Email, Token } from "./shared";
 
 export class Calendar {
     constructor(private all: Array<Slot>) {
@@ -20,6 +20,13 @@ export class Calendar {
         } else {
             return new Error(["Slot already set"]);
         }
+    }
+
+    invite(set: Array<Free>, interviewee: Email, token: Token): Result<Array<Offered>> {
+        // should verify if interviewee was invited already
+        // should add this invitation or cancel the previous
+        const offered = set.map(f => f.offeredTo(interviewee, token))
+        return new Ok(offered);
     }
 
     slots(): Array<Slot> {
