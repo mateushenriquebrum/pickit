@@ -16,8 +16,8 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
     }
 
     // offered slots
-    async fetchFreeSlotsByToken(token: Token): Promise<Array<Free>> {
-        const query = await this.modelFactory.Slot().cache("fetchFreeSlotsByToken").findAll({where:{interviewee: null}})
+    async fetchOfferedSlotsByToken(token: Token): Promise<Array<Offered>> {
+        const query = await this.modelFactory.Slot().cache("fetchOfferedSlotsByToken").findAll({where:{token}})
         const slots = query.map((ds: Model) => {            
             const free: Free = ds.get({plain: true})
             return free

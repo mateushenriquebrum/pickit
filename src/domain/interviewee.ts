@@ -1,8 +1,8 @@
-import { Free, Offered, Slot, Taken } from "./slot";
+import { Offered, Slot, Taken } from "./slot";
 import { Result, Ok, Email, Token } from './shared'
 
 export interface IntervieweeRepository {
-    fetchFreeSlotsByToken(token: Token): Promise<Array<Free>>
+    fetchOfferedSlotsByToken(token: Token): Promise<Array<Offered>>
     saveTakenSlotByToken(taken: Taken): Promise<Taken>
     fetchIntervieweeSlotByToken(token: Token): Promise<Email>
 }
@@ -12,7 +12,7 @@ export class FetchIntervieweeCalendarByToken {
 
     async execute(token: Token): Promise<Result<Array<Slot>>> {
         // verify if token has been used
-        const slots = (await this.rep.fetchFreeSlotsByToken(token))
+        const slots = (await this.rep.fetchOfferedSlotsByToken(token))
         return new Ok(slots);
     }
 }

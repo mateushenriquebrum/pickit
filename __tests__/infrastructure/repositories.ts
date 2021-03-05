@@ -10,12 +10,13 @@ let fac = new TestDataModelFactory(seq);
 beforeEach(async() => {
     await DB.createDatabase(seq);
     const DbSlot = seq.model("slots");
-    await DbSlot.create({from: new Date(), to: new Date(), token: "token", interviewer: "interviwer@company.ie"})
-    await DbSlot.create({from: new Date(), to: new Date(), token: "token", interviewer: "interviwer@company.ie", interviewee: "candidate@gmail.com"})
+    await DbSlot.create({from: new Date(), to: new Date(), interviewer: "interviwer@company.ie"}) // free
+    await DbSlot.create({from: new Date(), to: new Date(), interviewer: "interviwer@company.ie", interviewee: "candidate@gmail.com"}) //taken
+    await DbSlot.create({from: new Date(), to: new Date(), token: "token", interviewer: "interviwer@company.ie"}) // offered
 })
 
 test("Should fetch only free slot by token", async () => {    
-    const freeSlots = await new SeqIntervieweeRepository(fac).fetchFreeSlotsByToken("token");
+    const freeSlots = await new SeqIntervieweeRepository(fac).fetchOfferedSlotsByToken("token");
     expect(freeSlots.length).toBe(1);
 })
 
@@ -27,7 +28,7 @@ test("Should return the saved taken slot", async () => {
 
 test("Should return the saved taken slot", async () => {    
     const savedTaken = await new SeqInterviewerRepository(fac).fetchAllSlotsFrom("interviwer@company.ie")    
-    expect(savedTaken.length).toBe(2)
+    expect(savedTaken.length).toBe(3)
 })
 
 test("Should return the saved free as taken", async () => {    

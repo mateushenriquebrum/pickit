@@ -7,12 +7,12 @@ let mockRep = mock<IntervieweeRepository>()
 describe("Interviewee fetch a calendar by token", () => {
     
     const token = "any_token";
-    const freeSlot = SlotBuilder.FreeWith("interviewer@company.ie").at("05-03-2021 16:27").span(15).build();
+    const freeSlot = SlotBuilder.FreeWith("interviewer@company.ie").at("05-03-2021 16:27").span(15).build();    
     const takenSlot = SlotBuilder.TakenBy("interviewee@company.ie").willChatWith("interviewer@company.ie").at("05-03-2021 16:27").span(15).build();
     const offeredSlot = freeSlot.offeredTo("interviewee@company.ie", token); //TODO: create builder
 
     it("Then interviewee fetch it all", async () => {
-        when(mockRep.fetchFreeSlotsByToken(token)).thenResolve([freeSlot])
+        when(mockRep.fetchOfferedSlotsByToken(token)).thenResolve([offeredSlot])
         const fetch = new FetchIntervieweeCalendarByToken(instance(mockRep))
         const slots = (await fetch.execute(token)).ok
         expect(slots).not.toBeNull()
