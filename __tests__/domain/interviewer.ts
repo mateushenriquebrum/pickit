@@ -44,6 +44,7 @@ describe("Interviewer fetches its calendar", () => {
         const free = SlotBuilder.FreeWith(interviewer).at("12-12-2012 15:00").span(15).build();
         when(repMock.fetchAllSlotsFrom(interviewer))
             .thenResolve([taken])
+            .thenResolve([free, taken])
         const set = new SetFreeSlotOnIntervierCalendar(instance(repMock));
         const calendar = (await set.execute(interviewer, [free])).ok
         expect(calendar.length).toBe(2);

@@ -4,18 +4,19 @@ import { Result, Ok, Error } from "./shared";
 export class Calendar {
     constructor(private all: Array<Slot>) {
         // this is a safe set of slots, it is intend to come from a repository
-        // TODO: raise exception when not, you are using it wrongly
+        // TODO: raise exception when not, you are using it wrongly        
     }
 
-    add(set: Array<Free>): Result<Array<Slot>> {
+    add(set: Array<Free>): Result<Calendar> {
 
         const _unique = this.all
             .map(mine => set.some(other => !other.intersect(mine)))
             .every(u => u)
 
         if (_unique) {
-            this.all.push(...set)
-            return new Ok(this.all);
+            const comp = [...this.all, ...set];
+            comp.sort((a, b) => a.from.isBefore(b.from)?-1:1)
+            return new Ok(new Calendar(comp));
         } else {
             return new Error(["Slot already set"]);
         }
