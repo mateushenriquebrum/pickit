@@ -1,9 +1,10 @@
 import { Free, Slot, Taken } from "./slot";
-import { Result, Ok, Error, Email, Token } from './shared'
+import { Result, Ok, Email, Token } from './shared'
 
 export interface IntervieweeRepository {
     fetchFreeSlotsByToken(token: Token): Promise<Array<Free>>
     saveTakenSlotByToken(taken: Taken): Promise<Taken>
+    fetchIntervieweeSlotByToken(token: Token): Promise<Email>
 }
 
 export class FetchIntervieweeCalendarByToken {
@@ -19,10 +20,11 @@ export class FetchIntervieweeCalendarByToken {
 export class PickFreeSlotByToken {
     constructor(private rep: IntervieweeRepository) { }
 
-    async execute(token: Token, slot: Free): Promise<Result<Taken>> {
+    async execute(token: Token, free: Free): Promise<Result<Taken>> {
         // verify if token has been used
         // verify authenticity of slot
-        const taken = slot.takenBy(token);
+        const interviewee = await this.rep.fetchIntervieweeSlotByToken(token);
+        const taken = free.takenBy(interviewee);
         await this.rep.saveTakenSlotByToken(taken);
         return new Ok(taken)
     }

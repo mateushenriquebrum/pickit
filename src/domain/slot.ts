@@ -20,15 +20,15 @@ export class Free extends Slot {
     constructor(readonly from: Moment, readonly to: Moment, readonly interviewer: Email) {
         super(from, to)
     }
-    takenBy(token: Token): Taken {
-        return new Taken(this.from, this.to, this.interviewer, token)
+    takenBy(interviwee: Email): Taken {
+        return new Taken(this.from, this.to, this.interviewer, interviwee)
     }
 }
 
 class TakenBuilder {
-    from: Moment;
-    to: Moment;
-    interviewer: String;
+    private from: Moment;
+    private to: Moment;
+    private interviewer: String;
 
     constructor(private interviewee: String) {}
 
@@ -52,8 +52,8 @@ class TakenBuilder {
 }
 
 class FreeBuilder {
-    from: Moment;
-    to: Moment;    
+    private from: Moment;
+    private to: Moment;    
 
     constructor(private interviewer: String) {}
 
