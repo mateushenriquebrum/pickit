@@ -1,7 +1,5 @@
 import {
-    Free,
-    Taken,
-    Slot
+    SlotBuilder
 } from '../../src/domain/slot';
 
 import {
@@ -9,11 +7,8 @@ import {
 } from '../../src/domain/calendar';
 
 describe("Calendar", () => {
-    let zero = new Date(0);
-    let fifteen = new Date(1000 * 60 * 15) // 15 min
-    let thirty = new Date(1000 * 60 * 30) // 30 min
-    let someFreeSlot = new Free(zero, fifteen, "")
-    let anotherFreeSlot = new Free(fifteen, thirty, "");
+    let someFreeSlot = SlotBuilder.FreeWith("none").at("10-10-2021 12:00").span(15).build()
+    let anotherFreeSlot = SlotBuilder.FreeWith("none").at("10-10-2021 12:15").span(15).build()
 
     it("Then it should start with some slots", async () => {
         let calendar = new Calendar([someFreeSlot, anotherFreeSlot]);
@@ -34,4 +29,8 @@ describe("Calendar", () => {
         expect(calendar.slots().length).toBe(1);
         expect(res.error.length).toBe(1)
     });
+
+    it("Then it should be sorted by time", async () => {
+        //let calendar = new Calendar([someFreeSlot]);
+    })
 })
