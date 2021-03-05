@@ -20,6 +20,15 @@ export class Free extends Slot {
     constructor(readonly from: Moment, readonly to: Moment, readonly interviewer: Email) {
         super(from, to)
     }
+    offeredTo(interviwee: Email, token: Token): Offered {
+        return new Offered(this.from, this.to, this.interviewer, interviwee, token)
+    }
+}
+
+export class Offered extends Slot {
+    constructor(readonly from: Moment, readonly to: Moment, readonly interviewer: Email, interviwee: Email, readonly token: Token) {
+        super(from, to)
+    }
     takenBy(interviwee: Email): Taken {
         return new Taken(this.from, this.to, this.interviewer, interviwee)
     }

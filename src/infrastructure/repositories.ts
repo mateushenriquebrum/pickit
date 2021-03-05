@@ -2,13 +2,20 @@ import { Model, ModelCtor } from 'sequelize';
 import { IntervieweeRepository } from '../domain/interviewee';
 import { InterviewerRepository } from '../domain/interviewer';
 import { Token, Email } from "../domain/shared";
-import { Taken, Free, Slot } from "../domain/slot";
+import { Taken, Free, Slot, Offered } from "../domain/slot";
 import {DataModelFactory} from "../infrastructure/model";
 
 export class SeqIntervieweeRepository implements IntervieweeRepository {
 
     constructor(private modelFactory: DataModelFactory) {}
+    
+    async fetchIntervieweeSlotByToken(token: String): Promise<Email> {
+        const query = await this.modelFactory.Slot().cache("fetchIntervieweeSlotByToken").findOne({where:{token}})
+        const slot: Offered = query.get({plain: true});
+        return slot.token;
+    }
 
+    // offered slots
     async fetchFreeSlotsByToken(token: Token): Promise<Array<Free>> {
         const query = await this.modelFactory.Slot().cache("fetchFreeSlotsByToken").findAll({where:{interviewee: null}})
         const slots = query.map((ds: Model) => {            

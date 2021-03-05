@@ -11,7 +11,6 @@ const RedisAdaptor = require('sequelize-transparent-cache-ioredis')
 const VariableAdaptor = require('sequelize-transparent-cache-variable')
 const Cache = require('sequelize-transparent-cache')
 import * as Sequelize from "sequelize";
-import { ModelCtor } from "sequelize";
 
 function Slot(seq: Sequelize.Sequelize) {
     return seq.define('slots', {

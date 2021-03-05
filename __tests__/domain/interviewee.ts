@@ -5,10 +5,11 @@ import { Free, Taken, SlotBuilder } from '../../src/domain/slot';
 let mockRep = mock<IntervieweeRepository>()
 
 describe("Interviewee fetch a calendar by token", () => {
-
+    
+    const token = "any_token";
     const freeSlot = SlotBuilder.FreeWith("interviewer@company.ie").at("05-03-2021 16:27").span(15).build();
     const takenSlot = SlotBuilder.TakenBy("interviewee@company.ie").willChatWith("interviewer@company.ie").at("05-03-2021 16:27").span(15).build();
-    const token = "any_token";
+    const offeredSlot = freeSlot.offeredTo("interviewee@company.ie", token); //TODO: create builder
 
     it("Then interviewee fetch it all", async () => {
         when(mockRep.fetchFreeSlotsByToken(token)).thenResolve([freeSlot])
@@ -19,10 +20,10 @@ describe("Interviewee fetch a calendar by token", () => {
         verify(mockRep.saveTakenSlotByToken(anyOfClass(Taken))).never()
     });
 
-    it("Then interviewee pick a free slot", async () => {
+    it("Then interviewee pick a offered slot", async () => {
         when(mockRep.fetchIntervieweeSlotByToken(token)).thenResolve("interviewee@company.ie")        
-        const pick = new PickFreeSlotByToken(instance(mockRep))
-        const confirm = (await pick.execute(token, freeSlot)).ok
+        const pick = new PickFreeSlotByToken(instance(mockRep));
+        const confirm = (await pick.execute(token, offeredSlot)).ok
         expect(confirm).toStrictEqual(takenSlot);        
         verify(mockRep.saveTakenSlotByToken(anyOfClass(Taken))).once()
     });
