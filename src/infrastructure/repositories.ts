@@ -14,13 +14,12 @@ export class SeqIntervieweeRepository implements IntervieweeRepository {
         const slot: Offered = query.get({plain: true});
         return slot.token;
     }
-
-    // offered slots
+    
     async fetchOfferedSlotsByToken(token: Token): Promise<Array<Offered>> {
         const query = await this.modelFactory.Slot().cache("fetchOfferedSlotsByToken").findAll({where:{token}})
         const slots = query.map((ds: Model) => {            
-            const free: Free = ds.get({plain: true})
-            return free
+            const offered: Offered = ds.get({plain: true})
+            return offered
         })
         return slots;
     }
