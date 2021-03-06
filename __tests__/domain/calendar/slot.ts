@@ -1,6 +1,6 @@
 import {
     SlotBuilder,
-} from '../../../src/domain/calendar/slot';
+} from './helpers';
 
 describe("Slot", () => {
     

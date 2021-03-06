@@ -2,7 +2,9 @@ import { Slot, Free, SlotId, Offered } from './slot';
 import { Calendar } from './calendar';
 import { Result, Ok, Error, Email, Token } from "../shared";
 const { v4: uuidv4 } = require('uuid');
-
+/**
+ * Repostiry for Interviewer
+ */
 export interface InterviewerRepository {
     fetchAllSlotsFrom(interviewer: Email): Promise<Array<Slot>>
     saveFreeSlotTo(slots: Array<Free>): Promise<Array<Free>>
@@ -10,16 +12,25 @@ export interface InterviewerRepository {
     fetchFreeSlotsByIds(ids: Array<SlotId>): Promise<Array<Free>>
 }
 
+/**
+ * Token Generator Domain Service
+ */
 export interface TokenGenerator {
     invitationToken(interviewer: Email, interviewee: Email): Promise<Token>
 }
 
+/**
+ * UUID Token Generator Domain Service
+ */
 export class UUIDTokenGenerator implements TokenGenerator {
     invitationToken(interviewer: Email, interviewee: Email): Promise<Token> {
         return uuidv4();
     }
 }
 
+/**
+ * Domain Service 
+ */
 export class FetchInterviwerCalendar {
     constructor(private rep: InterviewerRepository) { }
     public execute(interviewer: Email): Promise<Array<Slot>> {
@@ -27,6 +38,9 @@ export class FetchInterviwerCalendar {
     }
 }
 
+/**
+ * Domain Service
+ */
 export class SetFreeSlotOnIntervierCalendar {
     
     constructor(private rep: InterviewerRepository) { }
@@ -44,6 +58,9 @@ export class SetFreeSlotOnIntervierCalendar {
     }
 }
 
+/**
+ * Domain Service
+ */
 export class InviteInterviwerByEmail {
     constructor(private gen: TokenGenerator, private rep: InterviewerRepository) { }
     public async execute(interviewer: Email, email: Email, ids: Array<SlotId>): Promise<Result<String>> {

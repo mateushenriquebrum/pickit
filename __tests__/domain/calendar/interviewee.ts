@@ -1,6 +1,6 @@
 import { FetchIntervieweeCalendarByToken, IntervieweeRepository, PickFreeSlotByToken } from '../../../src/domain/calendar/interviewee';
-import { instance, mock, when, verify, anyOfClass } from 'ts-mockito';
-import { Free, Taken, SlotBuilder } from '../../../src/domain/calendar/slot';
+import { instance, mock, when, verify, anyOfClass, anything } from 'ts-mockito';
+import { SlotBuilder } from './helpers';
 
 let mockRep = mock<IntervieweeRepository>()
 
@@ -17,7 +17,7 @@ describe("Interviewee fetch a calendar by token", () => {
         const slots = (await fetch.execute(token)).ok
         expect(slots).not.toBeNull()
         expect(slots.length).toBe(1);        
-        verify(mockRep.updateTakenSlotByToken(anyOfClass(Taken))).never()
+        verify(mockRep.updateTakenSlotByToken(anything())).never()
     });
 
     it("Then interviewee pick a offered slot", async () => {
@@ -26,7 +26,7 @@ describe("Interviewee fetch a calendar by token", () => {
         const pick = new PickFreeSlotByToken(instance(mockRep));
         const confirm = (await pick.execute(token, offeredSlot.id)).ok
         expect(confirm).toStrictEqual(takenSlot);        
-        verify(mockRep.updateTakenSlotByToken(anyOfClass(Taken))).once()
+        verify(mockRep.updateTakenSlotByToken(anything())).once()
     });
 
     it("Then interviewee pick a taken slot", async () => {

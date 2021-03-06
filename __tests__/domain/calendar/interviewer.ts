@@ -7,7 +7,7 @@ import {
 } from '../../../src/domain/calendar/interviewer';
 import {
     SlotBuilder
-} from '../../../src/domain/calendar/slot';
+} from './helpers';
 import {
     instance,
     mock,

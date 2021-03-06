@@ -1,12 +1,18 @@
 import { Offered, Slot, Taken } from "./slot";
 import { Result, Ok, Email, Token } from '../shared'
 
+/**
+ * Interviewee Repository
+ */
 export interface IntervieweeRepository {
     fetchOfferedSlotsByToken(token: Token): Promise<Array<Offered>>
     updateTakenSlotByToken(taken: Taken): Promise<Taken>
     fetchIntervieweeSlotByToken(token: Token): Promise<Email>
 }
 
+/**
+ * Domain Service
+ */
 export class FetchIntervieweeCalendarByToken {
     constructor(private rep: IntervieweeRepository) { }
 
@@ -17,6 +23,9 @@ export class FetchIntervieweeCalendarByToken {
     }
 }
 
+/**
+ * Domain Service
+ */
 export class PickFreeSlotByToken {
     constructor(private rep: IntervieweeRepository) { }
 
