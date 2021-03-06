@@ -2,6 +2,11 @@ import { Email, Ok, Result, Error, Token } from "../shared";
 
 var jwt = require('jsonwebtoken');
 type JWT = string; // should be nice to be able to define constraints here like .*{12}.*{12}.*{12}, because the type here is not only a string but a well know formated string.
+
+type User = {email: Email, secret: string};
+/**
+ * Domain Service
+ */
 export class Tokens {
     private secret;
     constructor() {
@@ -22,16 +27,24 @@ export class Tokens {
     }
 }
 
+/**
+ * User Repository
+ */
 export interface UserRepository {
     findUserByEmailAndSecret(user: User): User
 }
 
+/**
+ * Mock User Repository
+ */
 export class MockUserRepository implements UserRepository {
     findUserByEmailAndSecret(user: User): User {
         return user;
     }
 }
-type User = {email: Email, secret: string};
+/**
+ * Domain Service
+ */
 export class InterviewerLogin {
     // Some repository where you can find the user by user and pass
     // That is trivial, not implemented here by the sake of time    

@@ -1,6 +1,8 @@
 import { Slot, Free, Taken, Offered } from "./slot";
 import { Result, Ok, Error, Email, Token } from "../shared";
-
+/**
+ * Aggregator
+ */
 export class Calendar {
     constructor(private all: Array<Slot>) {
         // this is a safe set of slots, it is intend to come from a repository
