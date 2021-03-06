@@ -14,7 +14,7 @@ export class Tokens {
 
     async verify(token: JWT): Promise<Boolean> {
         try{
-            const result = jwt.verify(token, this.secret)
+            jwt.verify(token, this.secret)
             return true
         } catch (e) {
             return false
