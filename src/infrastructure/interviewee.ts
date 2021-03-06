@@ -1,7 +1,7 @@
 import { FetchIntervieweeCalendarByToken, PickFreeSlotByToken } from "../domain/calendar/interviewee"
 import express from 'express';
 import { SeqIntervieweeRepository } from "./repositories"
-import { EnvDataModelFactory } from "./DataModelFactoryFactory";
+import { EnvDataModelFactory } from "./env";
 
 const intervieweeRepository = new SeqIntervieweeRepository(new EnvDataModelFactory().new())
 

@@ -4,12 +4,11 @@ const moment = require("moment");
 import express from 'express';
 import { SeqInterviewerRepository } from "./repositories"
 import {Tokens} from "../domain/user/authentication"
-import { EnvDataModelFactory } from "./DataModelFactoryFactory";
+import { EnvDataModelFactory } from "./env";
 
 const interviewerRepository = new SeqInterviewerRepository(new EnvDataModelFactory().new())
 
 var router = express.Router()
-
 
 router.use(async (req, res, next) => {
     const bearer = req.header("Authorization");
