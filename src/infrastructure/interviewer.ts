@@ -2,22 +2,14 @@ import { FetchInterviwerCalendar, SetFreeSlotOnIntervierCalendar, InviteInterviw
 import { Free } from "../domain/calendar/slot"
 const moment = require("moment");
 import express from 'express';
-import * as Sequelize from 'sequelize';
 import { SeqInterviewerRepository } from "./repositories"
-import { VariableCacheDataModelFactory } from "./model"
 import {Tokens} from "../domain/user/authentication"
+import { EnvDataModelFactory } from "./DataModelFactoryFactory";
+
+const interviewerRepository = new SeqInterviewerRepository(new EnvDataModelFactory().new())
 
 var router = express.Router()
 
-let interviewerRepository: SeqInterviewerRepository;
-
-const seq = new Sequelize.Sequelize('pickit', 'pickit', 'pickit', {
-    logging: true,
-    dialect: "sqlite",
-    storage: "pickit.sqlite"
-})
-const fac = new VariableCacheDataModelFactory(seq)
-interviewerRepository = new SeqInterviewerRepository(fac)
 
 router.use(async (req, res, next) => {
     const bearer = req.header("Authorization");
