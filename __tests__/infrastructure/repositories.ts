@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize';
 import { SeqIntervieweeRepository, SeqInterviewerRepository } from "../../src/infrastructure/repositories";
 import * as DB from "../../src/infrastructure/database";
-import { SlotBuilder } from '../../src/domain/slot';
+import { SlotBuilder } from '../../src/domain/calendar/slot';
 import { VariableCacheDataModelFactory } from '../../src/infrastructure/model';
 
 let seq = new Sequelize.Sequelize('sqlite::memory:?cache=shared', { logging: false })

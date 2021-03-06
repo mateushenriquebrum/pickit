@@ -1,6 +1,6 @@
-import { FetchIntervieweeCalendarByToken, IntervieweeRepository, PickFreeSlotByToken } from '../../src/domain/interviewee';
+import { FetchIntervieweeCalendarByToken, IntervieweeRepository, PickFreeSlotByToken } from '../../../src/domain/calendar/interviewee';
 import { instance, mock, when, verify, anyOfClass } from 'ts-mockito';
-import { Free, Taken, SlotBuilder } from '../../src/domain/slot';
+import { Free, Taken, SlotBuilder } from '../../../src/domain/calendar/slot';
 
 let mockRep = mock<IntervieweeRepository>()
 

@@ -1,8 +1,8 @@
 import { Model } from 'sequelize';
-import { IntervieweeRepository } from '../domain/interviewee';
-import { InterviewerRepository } from '../domain/interviewer';
+import { IntervieweeRepository } from '../domain/calendar/interviewee';
+import { InterviewerRepository } from '../domain/calendar/interviewer';
 import { Token, Email } from "../domain/shared";
-import { Taken, Free, Offered } from "../domain/slot";
+import { Taken, Free, Offered } from "../domain/calendar/slot";
 import { DataModelFactory } from "../infrastructure/model";
 
 export class SeqIntervieweeRepository implements IntervieweeRepository {

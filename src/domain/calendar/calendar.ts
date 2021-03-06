@@ -1,5 +1,5 @@
 import { Slot, Free, Taken, Offered } from "./slot";
-import { Result, Ok, Error, Email, Token } from "./shared";
+import { Result, Ok, Error, Email, Token } from "../shared";
 
 export class Calendar {
     constructor(private all: Array<Slot>) {

@@ -1,13 +1,12 @@
 import express from 'express';
-import { SlotBuilder } from '../domain/slot';
 const bodyParser = require('body-parser');
 
 import * as Sequelize from 'sequelize';
 
-import { InterviewerLogin, MockUserRepository } from "../domain/authentication"
-import { FetchInterviwerCalendar, SetFreeSlotOnIntervierCalendar, InviteInterviwerByEmail, UUIDTokenGenerator } from "../domain/interviewer"
-import { FetchIntervieweeCalendarByToken, PickFreeSlotByToken } from "../domain/interviewee"
-import { Free } from "../domain/slot"
+import { InterviewerLogin, MockUserRepository } from "../domain/user/authentication"
+import { FetchInterviwerCalendar, SetFreeSlotOnIntervierCalendar, InviteInterviwerByEmail, UUIDTokenGenerator } from "../domain/calendar/interviewer"
+import { FetchIntervieweeCalendarByToken, PickFreeSlotByToken } from "../domain/calendar/interviewee"
+import { Free } from "../domain/calendar/slot"
 import { SeqInterviewerRepository, SeqIntervieweeRepository } from "../infrastructure/repositories"
 import { VariableCacheDataModelFactory } from "../infrastructure/model"
 import moment from 'moment';

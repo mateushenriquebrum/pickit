@@ -4,10 +4,10 @@ import {
     SetFreeSlotOnIntervierCalendar,
     InviteInterviwerByEmail,
     TokenGenerator
-} from '../../src/domain/interviewer';
+} from '../../../src/domain/calendar/interviewer';
 import {
     SlotBuilder
-} from '../../src/domain/slot';
+} from '../../../src/domain/calendar/slot';
 import {
     instance,
     mock,
@@ -17,7 +17,7 @@ import {
     anyOfClass,
     anything
 } from 'ts-mockito';
-import { Email } from "../../src/domain/shared";
+import { Email } from "../../../src/domain/shared";
 
 let repMock: InterviewerRepository = mock<InterviewerRepository>();
 let genMock: TokenGenerator = mock<TokenGenerator>();

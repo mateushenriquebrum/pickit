@@ -1,5 +1,5 @@
 import { Offered, Slot, Taken } from "./slot";
-import { Result, Ok, Email, Token } from './shared'
+import { Result, Ok, Email, Token } from '../shared'
 
 export interface IntervieweeRepository {
     fetchOfferedSlotsByToken(token: Token): Promise<Array<Offered>>

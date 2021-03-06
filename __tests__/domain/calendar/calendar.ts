@@ -1,10 +1,10 @@
 import {
     SlotBuilder
-} from '../../src/domain/slot';
+} from '../../../src/domain/calendar/slot';
 
 import {
     Calendar,
-} from '../../src/domain/calendar';
+} from '../../../src/domain/calendar/calendar';
 
 describe("Calendar", () => {
     const fstFreeSlot = SlotBuilder.FreeWith("none").at("10-10-2021 12:00").spans(15).build()

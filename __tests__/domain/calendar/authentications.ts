@@ -1,4 +1,4 @@
-import { Tokens } from '../../src/domain/authentication';
+import { Tokens } from '../../../src/domain/user/authentication';
 
 test("Should get a JWT token", async () => {    
     const token = new Tokens().tokenFor({interviewer: "mateushenriquebrum@gmail.com"});

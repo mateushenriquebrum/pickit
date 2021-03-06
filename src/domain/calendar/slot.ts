@@ -1,6 +1,6 @@
 const moment = require('moment');
 import { Moment } from "moment";
-import { Email, Token } from "./shared";
+import { Email, Token } from "../shared";
 
 export type SlotId = string;
 
@@ -38,7 +38,7 @@ export class Offered extends Slot {
     }
 }
 
-class TakenBuilder {
+export class TakenBuilder {
     private from: Moment;
     private to: Moment;
     private interviewer: Email;
@@ -64,7 +64,7 @@ class TakenBuilder {
 
 }
 
-class FreeBuilder {
+export class FreeBuilder {
     private from: Moment;
     private to: Moment;    
 
@@ -84,7 +84,6 @@ class FreeBuilder {
     }
 
 }
-
 
 export class SlotBuilder {
     

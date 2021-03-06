@@ -1,6 +1,6 @@
 import { Slot, Free, SlotId, Offered } from './slot';
 import { Calendar } from './calendar';
-import { Result, Ok, Error, Email, Token } from "./shared";
+import { Result, Ok, Error, Email, Token } from "../shared";
 const { v4: uuidv4 } = require('uuid');
 
 export interface InterviewerRepository {
