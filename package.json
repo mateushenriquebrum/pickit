@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "npm run build && nodemon dist/infrastructure/app.js",
+    "start": "npm run build && nodemon dist/infrastructure/api.js",
     "build": "tsc --project ./",
     "test": "npm run build && jest"
   },
