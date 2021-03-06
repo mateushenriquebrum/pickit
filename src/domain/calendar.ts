@@ -24,8 +24,8 @@ export class Calendar {
 
     invite(set: Array<Free>, interviewee: Email, token: Token): Result<Array<Offered>> {
         // should verify if interviewee was invited already
-        // should add this invitation or cancel the previous
-        const offered = set.map(f => f.offeredTo(interviewee, token))
+        // should add this invitation or cancel the previous        
+        const offered = set.map((f: Free) => f.offeredTo(interviewee, token))
         return new Ok(offered);
     }
 

@@ -15,8 +15,8 @@ export class Error<T> extends Result<T>{
     }
 }
 
-export type Email = String
+export type Email = string
 
-export type Token = String
+export type Token = string
 
-export type InterviewerId = String
+export type InterviewerId = string

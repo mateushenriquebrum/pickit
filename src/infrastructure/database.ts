@@ -1,8 +1,8 @@
 import * as Sequelize from "sequelize";
-import {TestDataModelFactory} from "../infrastructure/model";
+import {VariableCacheDataModelFactory, RedisCacheDataModelFactory} from "../infrastructure/model";
 
-export async function createDatabase(seq: Sequelize.Sequelize) {
-    const factory = new TestDataModelFactory(seq);
+export async function createTestDatabase(seq: Sequelize.Sequelize) {
+    const factory = new VariableCacheDataModelFactory(seq);
     factory.Slot();
     //"WARNING: this code should never go to production env"
     await seq.sync({ force: true });

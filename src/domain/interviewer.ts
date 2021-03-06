@@ -1,16 +1,23 @@
 import { Slot, Free, SlotId, Offered } from './slot';
 import { Calendar } from './calendar';
-import { Result, Ok, Error, Email } from "./shared";
+import { Result, Ok, Error, Email, Token } from "./shared";
+const { v4: uuidv4 } = require('uuid');
 
 export interface InterviewerRepository {
     fetchAllSlotsFrom(interviewer: Email): Promise<Array<Slot>>
     saveFreeSlotTo(slots: Array<Free>): Promise<Array<Free>>
-    saveOfferedSlots(slots: Array<Offered>): Promise<Array<Offered>>
+    updateOfferedSlots(slots: Array<Offered>): Promise<Array<Offered>>
     fetchFreeSlotsByIds(ids: Array<SlotId>): Promise<Array<Free>>
 }
 
 export interface TokenGenerator {
-    invitationToken(interviewer: Email, interviewee: Email): Promise<String>
+    invitationToken(interviewer: Email, interviewee: Email): Promise<Token>
+}
+
+export class UUIDTokenGenerator implements TokenGenerator {
+    invitationToken(interviewer: Email, interviewee: Email): Promise<Token> {
+        return uuidv4();
+    }
 }
 
 export class FetchInterviwerCalendar {
@@ -42,12 +49,12 @@ export class InviteInterviwerByEmail {
     public async execute(interviewer: Email, email: Email, ids: Array<SlotId>): Promise<Result<String>> {
         const token = await this.gen.invitationToken(interviewer, email)
         const slots = await this.rep.fetchAllSlotsFrom(interviewer);
-        const frees = await this.rep.fetchFreeSlotsByIds(ids);
+        const frees = await this.rep.fetchFreeSlotsByIds(ids);        
         const res = new Calendar(slots).invite(frees, email, token);
         if(res.error.length) {
             new Error([`You can not invite this ${email}`]);
         } else {
-            this.rep.saveOfferedSlots(res.ok);
+            this.rep.updateOfferedSlots(res.ok);
             return new Ok(token);
         }
         

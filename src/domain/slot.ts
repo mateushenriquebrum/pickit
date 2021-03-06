@@ -4,11 +4,10 @@ import { Email, Token } from "./shared";
 
 export type SlotId = string;
 
-export abstract class Slot {
-    public id: SlotId;
+export class Slot {
     // lack of abstraction, as you need id to serialize objects, e.g, DTO, Database, but it is the dabase that provide it.
     // TODO: some experiments with URN urn:slot:<interviewer>:<from>:<to>, as it is a natural identifier in domain
-    constructor(readonly from: Moment, readonly to: Moment) { }
+    constructor(readonly id: SlotId, readonly from: Moment, readonly to: Moment, readonly interviewer: Email) { }
 
     intersect(another: Slot): Boolean {
         return moment(this.from).isSame(moment(another.from));
@@ -16,51 +15,51 @@ export abstract class Slot {
 }
 
 export class Taken extends Slot {
-    constructor(readonly from: Moment, readonly to: Moment, readonly interviewer: Email, readonly interviewee: Token) {
-        super(from, to)
+    constructor(readonly id: SlotId, readonly from: Moment, readonly to: Moment, readonly interviewer: Email, readonly interviewee: Token) {
+        super(id, from, to, interviewer)
     }
 }
 
 export class Free extends Slot {
-    constructor(readonly from: Moment, readonly to: Moment, readonly interviewer: Email) {
-        super(from, to)
+    constructor(readonly id: SlotId, readonly from: Moment, readonly to: Moment, readonly interviewer: Email) {
+        super(id, from, to, interviewer)
     }
     offeredTo(interviwee: Email, token: Token): Offered {
-        return new Offered(this.from, this.to, this.interviewer, interviwee, token)
+        return new Offered(this.id, this.from, this.to, this.interviewer, interviwee, token)
     }
 }
 
 export class Offered extends Slot {
-    constructor(readonly from: Moment, readonly to: Moment, readonly interviewer: Email, interviwee: Email, readonly token: Token) {
-        super(from, to)
+    constructor(readonly id: SlotId, readonly from: Moment, readonly to: Moment, readonly interviewer: Email, interviwee: Email, readonly token: Token) {
+        super(id, from, to, interviewer)
     }
     takenBy(interviwee: Email): Taken {
-        return new Taken(this.from, this.to, this.interviewer, interviwee)
+        return new Taken(this.id, this.from, this.to, this.interviewer, interviwee)
     }
 }
 
 class TakenBuilder {
     private from: Moment;
     private to: Moment;
-    private interviewer: String;
+    private interviewer: Email;
 
-    constructor(private interviewee: String) {}
+    constructor(private interviewee: Email) {}
 
-    at(dateAndTime: String) {
+    at(dateAndTime: Email) {
         this.from = moment(dateAndTime);
         return this;
     }
-    span(minutes: Number) {
+    spans(minutes: Number) {
         this.to = moment(this.from).add(minutes, "minutes");
         return this;
     }
-    willChatWith(interviewer: String) {
+    willChatWith(interviewer: Email) {
         this.interviewer = interviewer;
         return this;
     }
 
     build(): Taken {
-        return new Taken(this.from, this.to, this.interviewer, this.interviewee);
+        return new Taken("from_builder", this.from, this.to, this.interviewer, this.interviewee);
     }
 
 }
@@ -69,19 +68,19 @@ class FreeBuilder {
     private from: Moment;
     private to: Moment;    
 
-    constructor(private interviewer: String) {}
+    constructor(private interviewer: Email) {}
 
-    at(dateAndTime: String): FreeBuilder {
+    at(dateAndTime: string): FreeBuilder {
         this.from = moment(dateAndTime);
         return this;
     }
-    span(minutes: Number): FreeBuilder {
+    spans(minutes: Number): FreeBuilder {
         this.to = moment(this.from).add(minutes, "minutes");
         return this;
     }
     
     build(): Free {
-        return new Free(this.from, this.to, this.interviewer)
+        return new Free("from_builder", this.from, this.to, this.interviewer)
     }
 
 }
@@ -89,11 +88,11 @@ class FreeBuilder {
 
 export class SlotBuilder {
     
-    static TakenBy(interviewee: String) {
+    static TakenBy(interviewee: Email) {
         return new TakenBuilder(interviewee);
     }
 
-    static FreeWith(interviewer: String) {
+    static FreeWith(interviewer: Email) {
         return new FreeBuilder(interviewer);
     }
 }

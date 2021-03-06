@@ -7,9 +7,9 @@ import {
 } from '../../src/domain/calendar';
 
 describe("Calendar", () => {
-    const fstFreeSlot = SlotBuilder.FreeWith("none").at("10-10-2021 12:00").span(15).build()
-    const sndFreeSlot = SlotBuilder.FreeWith("none").at("10-10-2021 12:15").span(15).build()
-    const trdTakenSlot = SlotBuilder.TakenBy("none").at("10-10-2021 12:30").span(15).willChatWith("none").build();
+    const fstFreeSlot = SlotBuilder.FreeWith("none").at("10-10-2021 12:00").spans(15).build()
+    const sndFreeSlot = SlotBuilder.FreeWith("none").at("10-10-2021 12:15").spans(15).build()
+    const trdTakenSlot = SlotBuilder.TakenBy("none").at("10-10-2021 12:30").spans(15).willChatWith("none").build();
 
     it("Then it should start with some slots", async () => {
         const calendar = new Calendar([fstFreeSlot, sndFreeSlot]);

@@ -55,9 +55,8 @@ export abstract class DataModelFactory {
     }
 }
 
-export class ProductionDataModelFactory extends DataModelFactory {
-    constructor() {
-        const seq = new Sequelize.Sequelize('sqlite::memory:?cache=shared')
+export class RedisCacheDataModelFactory extends DataModelFactory {
+    constructor(seq: Sequelize.Sequelize) {        
         const adapter = new RedisAdaptor({
             client: new Redis(),
             namespace: 'cache',
@@ -67,7 +66,7 @@ export class ProductionDataModelFactory extends DataModelFactory {
     }
 }
 
-export class TestDataModelFactory extends DataModelFactory {
+export class VariableCacheDataModelFactory extends DataModelFactory {
     constructor(seq: Sequelize.Sequelize) {        
         super(seq, new VariableAdaptor());
     }

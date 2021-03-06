@@ -2,7 +2,7 @@ import { Email, Ok, Result, Error, Token } from "./shared";
 
 var jwt = require('jsonwebtoken');
 type JWT = string; // should be nice to be able to define constraints here like .*{12}.*{12}.*{12}, because the type here is not only a string but a well know formated string.
-class Tokens {
+export class Tokens {
     private secret;
     constructor() {
         this.secret = "some_private_key";

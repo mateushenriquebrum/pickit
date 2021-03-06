@@ -19,7 +19,8 @@
     "moment": "^2.29.1",
     "sequelize": "^6.5.0",
     "sequelize-transparent-cache": "^2.3.0",
-    "sequelize-transparent-cache-ioredis": "^2.3.0"
+    "sequelize-transparent-cache-ioredis": "^2.3.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.13.1",
