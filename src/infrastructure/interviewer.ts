@@ -3,8 +3,9 @@ import { Free } from "../domain/calendar/slot"
 const moment = require("moment");
 import express from 'express';
 import * as Sequelize from 'sequelize';
-import { SeqInterviewerRepository, SeqIntervieweeRepository } from "./repositories"
+import { SeqInterviewerRepository } from "./repositories"
 import { VariableCacheDataModelFactory } from "./model"
+import {Tokens} from "../domain/user/authentication"
 
 var router = express.Router()
 
@@ -17,6 +18,22 @@ const seq = new Sequelize.Sequelize('pickit', 'pickit', 'pickit', {
 })
 const fac = new VariableCacheDataModelFactory(seq)
 interviewerRepository = new SeqInterviewerRepository(fac)
+
+router.use(async (req, res, next) => {
+    const bearer = req.header("Authorization");
+    if(!bearer) {
+        res.status(403).send("Not authenticated");
+    } else {
+        const token = bearer.split(" ");
+        const valid = await new Tokens().verify(token[1]);
+        if(valid === true) {
+            next();
+        }
+        else {
+            res.status(403).send("Not authenticated");
+        }
+    }
+})
 
 router.get('/:email/calendar', async (req, res) => {
     const { email } = req.params
