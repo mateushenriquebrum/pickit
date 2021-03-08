@@ -1,4 +1,4 @@
-# pickit
+# PickIt
 Calendar sharing for Colaborators.
 
 ## Architecture
